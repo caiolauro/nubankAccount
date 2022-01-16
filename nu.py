@@ -1,0 +1,85 @@
+from pynubank import Nubank, MockHttpClient
+import json
+import pandas as pd
+from datetime import datetime
+from delta import get_metrics
+from gsheet import insert_values_in_gsheets
+import os
+
+current_week = datetime.now().isocalendar().week
+nu = Nubank()
+
+with open("credentials.json", "r", encoding="utf-8") as json_file:
+    data = json.load(json_file)
+
+if os.path.exists('fresh_token.txt') == False:
+    fresh_token = nu.authenticate_with_cert(data["login"], data["pwd"], "cert.p12")
+    with open("fresh_token.txt", 'w') as token_file:
+        token_file.write(fresh_token)
+else:
+    with open("fresh_token.txt", 'r') as token_file:
+        refresh_token = token_file.read().split('\n')[0]
+    nu.authenticate_with_refresh_token(refresh_token, "cert.p12")
+
+# Extrai compras feitas no cartão de crédito
+credit_transactions = nu.get_card_statements()
+
+df = pd.json_normalize(credit_transactions)
+
+#Selecionando apenas colunas de interesse
+credit_df = df[['description', 'category', 'amount', 'time', 'title','details.subcategory']]
+# removendo caracteres indesejados da coluna de data da transação
+credit_df['time'] = credit_df['time'].apply(lambda x: x.replace("Z","").replace("T"," "))
+
+# Gerando colunas para diferentes granularidades de data a partir credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+credit_df['amount'] = credit_df['amount'] / 100
+credit_df['hour'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').hour))
+credit_df['day'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').day))
+credit_df['week_of_year'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').isocalendar().week))
+credit_df['week_day'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').isocalendar().weekday))
+credit_df['month'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').month))
+credit_df['year'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').year))
+
+# Extraindo transações Nuconta
+account_statements = nu.get_account_statements()
+# Criando dataframe 
+nuconta_df = pd.DataFrame(account_statements).fillna("N/A")
+
+# Criando coluna diferenciando o que é Entrada e Saída
+nuconta_df['is_income'] = nuconta_df['title'].apply(lambda x: True if x.lower().__contains__("recebid") or  x.lower().__contains__("devolvid") else False)
+# Selecionando apenas registros de Saída
+nuconta_df_2 = nuconta_df.where(((nuconta_df['is_income']==False)) & (nuconta_df['detail'].str.contains("Adyen") == False)).dropna()
+
+nuconta_df_2 = nuconta_df_2[['postDate', 'amount']]
+new_columns = ['time','amount']
+nuconta_df_2.columns = new_columns
+# Transformando valores das transações em tipo de dados Float
+nuconta_df_2['amount'] = nuconta_df_2['amount'].apply(lambda x: float(x))
+
+# Geração de Colunas de Data para nuconta_df_2
+nuconta_df_2['day'] = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").day))
+nuconta_df_2['week_of_year'] = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").isocalendar().week))
+nuconta_df_2['week_day'] = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").isocalendar().weekday))
+nuconta_df_2['month'] = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").month))
+nuconta_df_2['year'] = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").year))
+nuconta_df_2['time'] = nuconta_df_2['time'] + ' 12:00:00'
+# Label para Nuconta
+nuconta_df_2['description'] = 'N/A'
+nuconta_df_2['category'] = 'Nuconta'
+
+# Merge do Dataframe de Cartão de Crédito x Nuconta
+transactions_history_df = credit_df.append(nuconta_df_2).sort_values(by="time",ascending=False).reset_index().drop(columns=['index']).fillna("N/A")
+
+metrics = get_metrics(transactions_history_df, 'time','amount')
+
+spend = metrics['acumm_spend_amount']
+delta_percentual = metrics['percentual_delta']
+period = metrics['period_info']
+# somando valor que está investido na SELIC com retirada em JUL'22
+accBalance = nu.get_account_balance() + 7201.38
+
+insert_values_in_gsheets(df=transactions_history_df
+                        ,accBalance=accBalance
+                        ,spend=spend 
+                        ,delta_percentual=delta_percentual
+                        , period_of_time=period)
