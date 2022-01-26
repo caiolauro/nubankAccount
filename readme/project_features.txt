@@ -1,3 +1,7 @@
+[] Comment the code
+
+[] Make the code modular and reusable
+
 [X] Create a Daily Savings History
     - Append Daily CurrentSaving Value in Spreadsheet sheet
 
