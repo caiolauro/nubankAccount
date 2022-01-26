@@ -4,3 +4,8 @@
 [] Create Daily Aggregation Transaction table
     [] Generate a daily budget column
     [] Create Visualization - Real Spend vs. Budget Spend
+
+[] Store and read credentials from encrypted file in S3
+
+[] get data from Nubank Shares
+
