@@ -1,0 +1,6 @@
+[X] Create a Daily Savings History
+    - Append Daily CurrentSaving Value in Spreadsheet sheet
+
+[] Create Daily Aggregation Transaction table
+    [] Generate a daily budget column
+    [] Create Visualization - Real Spend vs. Budget Spend
