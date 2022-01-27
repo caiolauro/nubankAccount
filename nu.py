@@ -89,7 +89,7 @@ spend = metrics['acumm_spend_amount']
 delta_percentual = metrics['percentual_delta']
 period = metrics['period_info']
 # somando valor que está investido na SELIC com retirada em JUL'22 + Conta Itaú + Ações Nubank
-accBalance = nu.get_account_balance() + 7201.38 + 2600 + 800
+accBalance = nu.get_account_balance() + 7201.38 + 2600 + 765 #LU: 27/01/2022
 
 insert_values_in_gsheets(df=transactions_history_df
                         ,accBalance=accBalance
