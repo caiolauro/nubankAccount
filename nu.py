@@ -3,10 +3,11 @@ import json
 import pandas as pd
 from datetime import datetime
 from delta import get_metrics
-from gsheet import insert_values_in_gsheets
+from gsheet import SpreadSheet
 import os
 import re
 
+gsheet = SpreadSheet()
 current_week = datetime.now().isocalendar().week
 current_datetime = datetime.now().strftime('%Y-%m-%d')
 nu = Nubank()
@@ -97,7 +98,8 @@ period = metrics['period_info']
 # somando valor que está investido na SELIC com retirada em JUL'22 + Conta Itaú + Ações Nubank
 accBalance = nu.get_account_balance() + 7201.38 + 2600 + 765 #LU: 27/01/2022
 
-insert_values_in_gsheets(df=transactions_history_df
+
+gsheet.insert_values(df=transactions_history_df
                         ,accBalance=accBalance
                         ,spend=spend 
                         ,delta_percentual=delta_percentual
