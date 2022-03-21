@@ -8,20 +8,20 @@ class SpreadSheet:
     id = '1pdHPpnOhA8_dvMKL9rbiUFYY5eo3urH8kKRSFSvyksg'
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
     SERVICE_ACCOUNT_FILE = r'creds/credentials.json'
-    #tabsDictionary = {"Daily Savings":"daily_savings", "Transactions Record":"transactions_record"}
+    
 
     @staticmethod
-    def insert_values(self, df,accBalance, spend ,delta_percentual, period_of_time,current_datetime):
+    def insert_values(df,accBalance, spend ,delta_percentual, period_of_time,current_datetime):
             
         creds = None
         creds = service_account.Credentials.from_service_account_file(
-                self.SERVICE_ACCOUNT_FILE, scopes=self.SCOPES)
+                SpreadSheet.SERVICE_ACCOUNT_FILE, scopes=SpreadSheet.SCOPES)
         
         service = build('sheets', 'v4', credentials=creds)
         
         # updates data transactions_df in transactions_record sheet
         service.spreadsheets().values().update(
-            spreadsheetId=self.gsheet_id,
+            spreadsheetId=SpreadSheet.id,
             valueInputOption='RAW',
             range='transactions_record!A2',
             body= dict(
@@ -34,7 +34,7 @@ class SpreadSheet:
 
         # writes date and current savings value on daily_savings
         service.spreadsheets().values().append(
-            spreadsheetId=self.gsheet_id,
+            spreadsheetId=SpreadSheet.id,
             valueInputOption='RAW',
             range='daily_savings!A:B',
             body= dict(
@@ -42,3 +42,4 @@ class SpreadSheet:
                 values=[[str(current_datetime),int(accBalance)]]
             )
         ).execute()
+        

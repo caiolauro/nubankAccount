@@ -7,7 +7,6 @@ from gsheet import SpreadSheet
 import re
 
 gsheet = SpreadSheet()
-current_week = datetime.now().isocalendar().week
 current_datetime = datetime.now().strftime('%Y-%m-%d')
 nu = Nubank()
 
@@ -36,8 +35,8 @@ credit_df['time'] = credit_df['time'].apply(lambda x: x.replace("Z","").replace(
 credit_df.loc[:,'amount'] = credit_df['amount'] / 100
 credit_df.loc[:,'hour'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').hour))
 credit_df.loc[:,'day'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').day))
-credit_df.loc[:,'week_of_year'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').isocalendar().week))
-credit_df.loc[:,'week_day'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').isocalendar().weekday))
+#credit_df.loc[:,'week_of_year'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S')))
+#credit_df.loc[:,'week_day'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').weekday))
 credit_df.loc[:,'month'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').month))
 credit_df.loc[:,'year'] = credit_df['time'].apply(lambda date: str(datetime.strptime(date, '%Y-%m-%d %H:%M:%S').year))
 
@@ -71,8 +70,8 @@ nuconta_df_2.loc[:,'amount']  = nuconta_df_2['amount'].apply(lambda x: float(x))
 
 # Geração de Colunas de Data para nuconta_df_2
 nuconta_df_2.loc[:,'day'] = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").day))
-nuconta_df_2.loc[:,'week_of_year'] = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").isocalendar().week))
-nuconta_df_2.loc[:,'week_day']  = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").isocalendar().weekday))
+#nuconta_df_2.loc[:,'week_of_year'] = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").isocalendar().week))
+#nuconta_df_2.loc[:,'week_day']  = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").isocalendar().weekday))
 nuconta_df_2.loc[:,'month'] = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").month))
 nuconta_df_2.loc[:,'year'] = nuconta_df_2['time'].apply(lambda date: str(datetime.strptime(date, "%Y-%m-%d").year))
 nuconta_df_2.loc[:,'time'] = nuconta_df_2['time'] + ' 12:00:00'
@@ -92,7 +91,7 @@ spend = metrics['acumm_spend_amount']
 delta_percentual = metrics['percentual_delta']
 period = metrics['period_info']
 # somando valor que está investido na SELIC com retirada em JUL'22 + Conta Itaú + Ações Nubank
-accBalance = nu.get_account_balance() + 7201.38 + 2600 + 765 #LU: 27/01/2022
+accBalance = nu.get_account_balance() + 7201.38 + 2600 + 600 #LU: 27/01/2022
 
 
 gsheet.insert_values(df=transactions_history_df
