@@ -31,7 +31,7 @@ def insert_values_in_gsheets(df,accBalance, spend ,delta_percentual, period_of_t
     service.spreadsheets().values().append(
         spreadsheetId=gsheet_id,
         valueInputOption='RAW',
-        range='main!A:B',
+        range='daily_savings!A:B',
         body= dict(
             majorDimension='ROWS',
             values=[[str(current_datetime),int(accBalance)]]

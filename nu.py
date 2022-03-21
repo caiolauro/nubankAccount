@@ -5,6 +5,7 @@ from datetime import datetime
 from delta import get_metrics
 from gsheet import insert_values_in_gsheets
 import os
+import re
 
 current_week = datetime.now().isocalendar().week
 current_datetime = datetime.now().strftime('%Y-%m-%d')
@@ -15,7 +16,7 @@ with open("creds/credentials.json", "r", encoding="utf-8") as json_file:
 
 #if os.path.exists('fresh_token.txt') == False:
 fresh_token = nu.authenticate_with_cert(data["login"], data["pwd"], r"creds/cert.p12")
-with open(r"creds/fresh_token.txt", 'w') as token_file:
+with open(r"creds/fresh_token", 'w') as token_file:
     token_file.write(fresh_token)
 #else:
    # with open("fresh_token.txt", 'r') as token_file:
@@ -60,8 +61,13 @@ nuconta_df_2 = nuconta_df.where(nuconta_df['detail'].str.contains("Adyen") == Fa
 # remove pagamentos de fatura
 nuconta_df_2 = nuconta_df_2.where(nuconta_df['__typename']!='BillPaymentEvent').dropna()
 
-nuconta_df_2 = nuconta_df_2[['postDate', 'amount', 'is_income']]
-new_columns = ['time','amount','is_income']
+
+# tratamento da coluna details
+nuconta_df_2['detail'] = nuconta_df_2['detail'].apply(lambda x: ''.join(re.findall('\D',x)).replace('R$','').replace('\n','').replace(',','').replace('.',''))
+
+# seleciona colunas desejadas nuconta_df
+nuconta_df_2 = nuconta_df_2[['postDate', 'amount', 'is_income','detail']]
+new_columns = ['time','amount','is_income','detail']
 nuconta_df_2.columns = new_columns
 # Transformando valores das transações em tipo de dados Float
 nuconta_df_2.loc[:,'amount']  = nuconta_df_2['amount'].apply(lambda x: float(x))
