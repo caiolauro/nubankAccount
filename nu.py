@@ -4,7 +4,6 @@ import pandas as pd
 from datetime import datetime
 from delta import get_metrics
 from gsheet import SpreadSheet
-import os
 import re
 
 gsheet = SpreadSheet()
