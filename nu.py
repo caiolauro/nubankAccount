@@ -14,14 +14,11 @@ nu = Nubank()
 with open("creds/credentials.json", "r", encoding="utf-8") as json_file:
     data = json.load(json_file)
 
-#if os.path.exists('fresh_token.txt') == False:
+
 fresh_token = nu.authenticate_with_cert(data["login"], data["pwd"], r"creds/cert.p12")
+
 with open(r"creds/fresh_token", 'w') as token_file:
     token_file.write(fresh_token)
-#else:
-   # with open("fresh_token.txt", 'r') as token_file:
-        #refresh_token = token_file.read().split('\n')[0]
-    #nu.authenticate_with_refresh_token(refresh_token, "cert.p12")
 
 # Extrai compras feitas no cartão de crédito
 credit_transactions = nu.get_card_statements()
