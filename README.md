@@ -1,3 +1,3 @@
 # Get Nubank Account Information
 
-## This project has the objective to get data from nubank personal accounts in order to create Intelligent Financial Reports that provide handful insights about personal finance.  
+## Use of pynubank API developed by @andreroggeri to build a simple data ETL with Python using Google Sheets to load the downloaded data.
