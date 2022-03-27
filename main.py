@@ -1,10 +1,13 @@
-from pynubank import Nubank, MockHttpClient
+from pynubank import Nubank
+import logging
 import json
 import pandas as pd
 from datetime import datetime
 from delta import get_metrics
 from gsheet import GSheet
 import re
+
+logging.basicConfig(level=logging.DEBUG, filename='logs/api_call_log.log', format='%(asctime)s:%(levelname)s:%(message)s')
 
 gsheet = GSheet()
 current_datetime = datetime.now().strftime('%Y-%m-%d')
@@ -15,6 +18,7 @@ with open("creds/credentials.json", "r", encoding="utf-8") as json_file:
 
 
 fresh_token = nu.authenticate_with_cert(data["login"], data["pwd"], r"creds/cert.p12")
+logging.debug('Creadentials read.')
 
 with open(r"creds/fresh_token", 'w') as token_file:
     token_file.write(fresh_token)
@@ -91,7 +95,12 @@ spend = metrics['acumm_spend_amount']
 delta_percentual = metrics['percentual_delta']
 period = metrics['period_info']
 # somando valor que está investido na SELIC com retirada em JUL'22 + Conta Itaú + Ações Nubank
-accBalance = nu.get_account_balance() + 7201.38 + 2600 + 600 #LU: 27/01/2022
+itau = 2600
+nuInvest = 600  #LU: 27/01/2022
+SELIC2022 = 7201.38
+accBalance = nu.get_account_balance() + SELIC2022 + itau + nuInvest
+
+logging.debug(f'Current Savings extracted: {accBalance}\n\tItau account = {itau}\n\tNu Investments = {nuInvest}\n\tSELCT July 2022 = {SELIC2022}')
 
 
-gsheet.insert_values(transactions_history_df,  accBalance, current_datetime)
+#gsheet.insert_values(transactions_history_df,  accBalance, current_datetime)
