@@ -94,9 +94,4 @@ period = metrics['period_info']
 accBalance = nu.get_account_balance() + 7201.38 + 2600 + 600 #LU: 27/01/2022
 
 
-gsheet.insert_values(df=transactions_history_df
-                        ,accBalance=accBalance
-                        ,spend=spend 
-                        ,delta_percentual=delta_percentual
-                        , period_of_time=period
-                        , current_datetime=current_datetime)
+gsheet.insert_values(transactions_history_df,  accBalance, current_datetime)
