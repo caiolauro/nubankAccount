@@ -1,6 +1,8 @@
 import pandas as pd
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
+import logging
+logging.basicConfig(level=logging.DEBUG, filename='logs/api_call_log.log', format='%(asctime)s:%(levelname)s:%(message)s')
 
 # variables
 GSHEET_TRANSACTIONS_TAB = 'transactions_record!A2'
@@ -33,7 +35,8 @@ class GSheet:
                 )
             ).execute()
         except Exception as e:
-            print(f"Error while updating {GSHEET_TRANSACTIONS_TAB}: {e}")
+            logging.error(f"Error while updating {GSHEET_TRANSACTIONS_TAB}: {e}")
+            #print(f"Error while updating {GSHEET_TRANSACTIONS_TAB}: {e}")
         
         print("Current Savings:",accBalance)
 
@@ -49,5 +52,6 @@ class GSheet:
                 )
             ).execute()
         except Exception as e:
-            print(f"Error while appending {GSHEET_DAILY_SAVINGS_TAB}: {e}")
+            logging.error(f"Error while appending {GSHEET_DAILY_SAVINGS_TAB}: {e}")
+            #print(f"Error while appending {GSHEET_DAILY_SAVINGS_TAB}: {e}")
         
