@@ -20,7 +20,7 @@ class nuService:
     ITAU:float = 2600
     NU_INVEST:float = 600
     SELIC2022:float = 7201.38
-    currentSavings:float = None
+    currentSavings:str = None
     
     @classmethod
     def inititalize(cls):
@@ -97,7 +97,7 @@ class nuService:
     def get_current_savings(cls):
         accBalance = cls.nu.get_account_balance() + cls.SELIC2022 + cls.ITAU + cls.NU_INVEST
         logging.debug(f'Current Savings extracted: {accBalance}\n\tItau account = {cls.ITAU}\n\tNu Investments = {cls.NU_INVEST}\n\tSELCT July 2022 = {cls.SELIC2022}')
-        cls.currentSavings = accBalance
+        cls.currentSavings = str(accBalance)
     @classmethod
     def update_gsheet(cls):
         cls.gsheet.insert_values(cls.fullTransactionsHistory, cls.currentSavings, cls.currentDatetime)
