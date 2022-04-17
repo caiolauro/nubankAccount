@@ -4,6 +4,7 @@ import json
 import pandas as pd
 from datetime import datetime
 from gsheet import GSheet
+from nu_tests.test_nuService import TestnuService
 import re
 
 logging.basicConfig(level=logging.DEBUG, filename='logs/api_call_log.log', format='%(asctime)s:%(levelname)s:%(message)s')
@@ -25,7 +26,7 @@ class nuService:
     @classmethod
     def inititalize(cls):
         cls.gsheet = GSheet()
-        cls.current_datetime = datetime.now().strftime('%Y-%m-%d')
+        cls.currentDatetime = datetime.now().strftime('%Y-%m-%d')
         cls.nu = Nubank()
         cls.get_fresh_token()
         
@@ -95,9 +96,10 @@ class nuService:
         
     @classmethod
     def get_current_savings(cls):
-        accBalance = cls.nu.get_account_balance() + cls.SELIC2022 + cls.ITAU + cls.NU_INVEST
+        accBalance = int(cls.nu.get_account_balance() + cls.SELIC2022 + cls.ITAU + cls.NU_INVEST)
         logging.debug(f'Current Savings extracted: {accBalance}\n\tItau account = {cls.ITAU}\n\tNu Investments = {cls.NU_INVEST}\n\tSELCT July 2022 = {cls.SELIC2022}')
-        cls.currentSavings = str(round(accBalance,0))
+        cls.currentSavings = str(accBalance)
+        TestnuService().test_current_savings(cls.currentSavings)
     @classmethod
     def update_gsheet(cls):
         cls.gsheet.insert_values(cls.fullTransactionsHistory, cls.currentSavings, cls.currentDatetime)
