@@ -89,11 +89,6 @@ transactions_history_df = credit_df.append(nuconta_df_2).sort_values(by="time",a
 transactions_history_df['is_income'].fillna(False,inplace=True)
 transactions_history_df.fillna("NULL",inplace=True)
 
-metrics = get_metrics(transactions_history_df, 'time','amount')
-
-spend = metrics['acumm_spend_amount']
-delta_percentual = metrics['percentual_delta']
-period = metrics['period_info']
 # somando valor que está investido na SELIC com retirada em JUL'22 + Conta Itaú + Ações Nubank
 itau = 2600
 nuInvest = 600  #LU: 27/01/2022
