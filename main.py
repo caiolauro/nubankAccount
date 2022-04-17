@@ -1,9 +1,15 @@
+# VARIABLES
+# valor que investido na SELIC com retirada em JUL'22 + Conta Itaú + Ações Nubank
+ITAU = 2600
+NU_INVEST = 600  #LU: 27/01/2022
+SELIC2022 = 7201.38
+
+# Imports
 from pynubank import Nubank
 import logging
 import json
 import pandas as pd
 from datetime import datetime
-from delta import get_metrics
 from gsheet import GSheet
 import re
 
@@ -89,13 +95,10 @@ transactions_history_df = credit_df.append(nuconta_df_2).sort_values(by="time",a
 transactions_history_df['is_income'].fillna(False,inplace=True)
 transactions_history_df.fillna("NULL",inplace=True)
 
-# somando valor que está investido na SELIC com retirada em JUL'22 + Conta Itaú + Ações Nubank
-itau = 2600
-nuInvest = 600  #LU: 27/01/2022
-SELIC2022 = 7201.38
-accBalance = nu.get_account_balance() + SELIC2022 + itau + nuInvest
 
-logging.debug(f'Current Savings extracted: {accBalance}\n\tItau account = {itau}\n\tNu Investments = {nuInvest}\n\tSELCT July 2022 = {SELIC2022}')
+accBalance = nu.get_account_balance() + SELIC2022 + ITAU + NU_INVEST
+
+logging.debug(f'Current Savings extracted: {accBalance}\n\tItau account = {ITAU}\n\tNu Investments = {NU_INVEST}\n\tSELCT July 2022 = {SELIC2022}')
 
 
 #gsheet.insert_values(transactions_history_df,  accBalance, current_datetime)
