@@ -8,7 +8,7 @@ import re
 
 logging.basicConfig(level=logging.DEBUG, filename='logs/api_call_log.log', format='%(asctime)s:%(levelname)s:%(message)s')
 
-class nuBot:
+class nuService:
 
     nu:Nubank = None
     gsheet:GSheet = None
