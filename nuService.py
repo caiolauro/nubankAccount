@@ -97,7 +97,7 @@ class nuService:
     def get_current_savings(cls):
         accBalance = cls.nu.get_account_balance() + cls.SELIC2022 + cls.ITAU + cls.NU_INVEST
         logging.debug(f'Current Savings extracted: {accBalance}\n\tItau account = {cls.ITAU}\n\tNu Investments = {cls.NU_INVEST}\n\tSELCT July 2022 = {cls.SELIC2022}')
-        cls.currentSavings = str(accBalance)
+        cls.currentSavings = str(round(accBalance,0))
     @classmethod
     def update_gsheet(cls):
         cls.gsheet.insert_values(cls.fullTransactionsHistory, cls.currentSavings, cls.currentDatetime)
