@@ -2,6 +2,9 @@ import pandas as pd
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 
+# variables
+GSHEET_TRANSACTIONS_TAB = 'transactions_record!A2'
+GSHEET_DAILY_SAVINGS_TAB = 'daily_savings!A:B'
 
 class GSheet:
     
@@ -22,7 +25,7 @@ class GSheet:
         service.spreadsheets().values().update(
             spreadsheetId=self.id,
             valueInputOption='RAW',
-            range='transactions_record!A2',
+            range=GSHEET_TRANSACTIONS_TAB,
             body= dict(
                 majorDimension='ROWS',
                 values=df.values.tolist()
@@ -35,7 +38,7 @@ class GSheet:
         service.spreadsheets().values().append(
             spreadsheetId=self.id,
             valueInputOption='RAW',
-            range='daily_savings!A:B',
+            range=GSHEET_DAILY_SAVINGS_TAB,
             body= dict(
                 majorDimension='ROWS',
                 values=[[str(current_datetime),int(accBalance)]]
