@@ -22,26 +22,32 @@ class GSheet:
         service = build('sheets', 'v4', credentials=creds)
         
         # updates data transactions_df in transactions_record sheet
-        service.spreadsheets().values().update(
-            spreadsheetId=self.id,
-            valueInputOption='RAW',
-            range=GSHEET_TRANSACTIONS_TAB,
-            body= dict(
-                majorDimension='ROWS',
-                values=df.values.tolist()
-            )
-        ).execute()
+        try:
+            service.spreadsheets().values().update(
+                spreadsheetId=self.id,
+                valueInputOption='RAW',
+                range=GSHEET_TRANSACTIONS_TAB,
+                body= dict(
+                    majorDimension='ROWS',
+                    values=df.values.tolist()
+                )
+            ).execute()
+        except Exception as e:
+            print(f"Error while updating {GSHEET_TRANSACTIONS_TAB}: {e}")
         
         print("Current Savings:",accBalance)
 
         # writes date and current savings value on daily_savings
-        service.spreadsheets().values().append(
-            spreadsheetId=self.id,
-            valueInputOption='RAW',
-            range=GSHEET_DAILY_SAVINGS_TAB,
-            body= dict(
-                majorDimension='ROWS',
-                values=[[str(current_datetime),int(accBalance)]]
-            )
-        ).execute()
+        try:
+            service.spreadsheets().values().append(
+                spreadsheetId=self.id,
+                valueInputOption='RAW',
+                range=GSHEET_DAILY_SAVINGS_TAB,
+                body= dict(
+                    majorDimension='ROWS',
+                    values=[[str(current_datetime),int(accBalance)]]
+                )
+            ).execute()
+        except Exception as e:
+            print(f"Error while appending {GSHEET_DAILY_SAVINGS_TAB}: {e}")
         
