@@ -32,11 +32,11 @@ class nuService:
         
     @classmethod
     def get_fresh_token(cls):
-        with open("creds/credentials.json", "r", encoding="utf-8") as json_file:
+        with open("/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/credentials.json", "r", encoding="utf-8") as json_file:
             data = json.load(json_file)
         logging.debug('Creadentials read.')
-        cls.freshToken = cls.nu.authenticate_with_cert(data["login"], data["pwd"], r"creds/cert.p12")
-        with open(r"creds/fresh_token", 'w') as token_file:
+        cls.freshToken = cls.nu.authenticate_with_cert(data["login"], data["pwd"], r"c/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/cert.p12")
+        with open(r"/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/fresh_token", 'w') as token_file:
             token_file.write(cls.freshToken)
 
     @classmethod

@@ -12,7 +12,7 @@ class GSheet:
     
     id = '1pdHPpnOhA8_dvMKL9rbiUFYY5eo3urH8kKRSFSvyksg'
     SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-    SERVICE_ACCOUNT_FILE = r'creds/credentials.json'
+    SERVICE_ACCOUNT_FILE = r'/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/credentials.json'
     
 
     def insert_values(self, df,accBalance,current_datetime):
