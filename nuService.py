@@ -35,7 +35,7 @@ class nuService:
         with open("/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/credentials.json", "r", encoding="utf-8") as json_file:
             data = json.load(json_file)
         logging.debug('Creadentials read.')
-        cls.freshToken = cls.nu.authenticate_with_cert(data["login"], data["pwd"], r"c/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/cert.p12")
+        cls.freshToken = cls.nu.authenticate_with_cert(data["login"], data["pwd"], r"/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/cert.p12")
         with open(r"/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/fresh_token", 'w') as token_file:
             token_file.write(cls.freshToken)
 
