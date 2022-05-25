@@ -7,7 +7,7 @@ from gsheet import GSheet
 from nu_tests.test_nuService import TestnuService
 import re
 
-logging.basicConfig(level=logging.DEBUG, filename='logs/api_call_log.log', format='%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.DEBUG, filename='/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/logs/api_call_log.log', format='%(asctime)s:%(levelname)s:%(message)s')
 
 class nuService:
 

@@ -2,7 +2,7 @@ import pandas as pd
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 import logging
-logging.basicConfig(level=logging.DEBUG, filename='logs/api_call_log.log', format='%(asctime)s:%(levelname)s:%(message)s')
+logging.basicConfig(level=logging.DEBUG, filename='/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/logs/api_call_log.log', format='%(asctime)s:%(levelname)s:%(message)s')
 
 # variables
 GSHEET_TRANSACTIONS_TAB = 'transactions_record!A2'
