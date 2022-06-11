@@ -33,7 +33,7 @@ class nuService:
         
     @classmethod
     def get_fresh_token(cls):
-        cls.freshToken = cls.nu.authenticate_with_cert(os.getenv("NU_USER_LOGIN"), os.getenv("NUBANK_PASSWORD"), r"/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/cert.p12")
+        cls.freshToken = cls.nu.authenticate_with_cert(os.getenv("NU_USER_LOGIN"), os.getenv("NU_PASSWORD"), r"/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/cert.p12")
         with open(r"/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/fresh_token", 'w') as token_file:
             token_file.write(cls.freshToken)
 
