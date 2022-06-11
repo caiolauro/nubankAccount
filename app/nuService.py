@@ -5,7 +5,7 @@ import pandas as pd
 import re
 from datetime import datetime
 from google_sheets.gsheet import GSheet
-#from app.nu_tests.test_nuService import TestnuService
+import os
 
 logging.basicConfig(level=logging.DEBUG, filename='/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/logs/api_call_log.log', format='%(asctime)s:%(levelname)s:%(message)s')
 
@@ -32,10 +32,7 @@ class nuService:
         
     @classmethod
     def get_fresh_token(cls):
-        with open("/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/credentials.json", "r", encoding="utf-8") as json_file:
-            data = json.load(json_file)
-        logging.debug('Creadentials read.')
-        cls.freshToken = cls.nu.authenticate_with_cert(data["login"], data["pwd"], r"/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/cert.p12")
+        cls.freshToken = cls.nu.authenticate_with_cert(os.getenv("NU_USER_LOGIN"), os.getenv("NU_PASSWORD"), r"/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/cert.p12")
         with open(r"/mnt/c/users/caio.lauro/Documents/personal_projects/NuBankAPI/creds/fresh_token", 'w') as token_file:
             token_file.write(cls.freshToken)
 
